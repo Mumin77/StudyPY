@@ -1,16 +1,61 @@
 from tkinter import *
 from tkinter import ttk
 
+operation = ''
+temp_number = 0
+#결과 출력 상태인지 상태 저장
+answer_trigger = False
+
 # 함수 추가 공간
 def btn_press(value):
-    num_ety.insert("end",value) # 텍스트 창으로 숫자를 전송한다. 'end'는 오른쪽 끝에 추가하라는 뜻
-    print(value,'눌려버렸다...')
+    global operation
+    global answer_trigger
+
+    if value =='AC': # AC버튼 눌렀을때 실행되는 것
+        num_ety.delete(0,'end')
+        operation = ''
+        answer_trigger = False
+        print("AC가 눌렸버렸다...")
+    else: # 그 외 숫자일 때 실행되는 것
+        if answer_trigger:
+            num_ety.delete(0,'end')
+            answer_trigger = False
+        num_ety.insert("end",value) # 텍스트 창으로 숫자를 전송한다. 'end'는 오른쪽 끝에 추가하라는 뜻
+        print(value,'눌려버렸다...')
 
 def math_btn_press(value):
-    print(value, '사칙연산눌려버렸다...') #사칙연산 버튼 계산
+    global operation #함수 바깥의 글로벌 변수 사용
+    global temp_number
+    global answer_trigger
+    if not num_ety.get() == '': # 기존에 입력한 숫자가 있을 때만 연산 버튼 인식
+        operation = value
+        temp_number = int(num_ety.get()) # 입력된 숫자를 임시 변수로 옮긴다.
+        num_ety.delete(0,'end') # 입력칸을 비우고 다음 숫자를 입력 받을 준비
+        print(temp_number, operation) #
 
 def equal_btn_press(): # =버튼 계산
-    print("이꼴 눌려버렸다...")
+    global operation
+    global temp_number
+    global answer_trigger
+    #연산자나 숫자가 입력되지 않으면 실행이 앙대요!
+    if not (operation == '' and num_ety.get()==''):
+        num = int(num_ety.get())
+        if operation == '/':
+            solution = temp_number/num
+        elif operation == '*':
+            solution = temp_number*num
+        elif operation == '+':
+            solution = temp_number+num
+        else :
+            solution = temp_number-num
+            # 계산 후 숫자 표시 칸을 비우고, 계산 결과를 표시
+            num_ety.delete(0,'end')
+            num_ety.insert(0,solution)
+            print(temp_number,operation,num,"=",solution)
+            operation = ''
+            temp_number = 0
+            # 계산 완료 후 Trigger 변수 True로 변경
+            answer_trigger =True
 
 root = Tk()
 root.title("진짜 계산기")
