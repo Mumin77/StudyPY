@@ -23,13 +23,21 @@ def btn_press(value):
         num_ety.insert("end",value) # 텍스트 창으로 숫자를 전송한다. 'end'는 오른쪽 끝에 추가하라는 뜻
         print(value,'눌려버렸다...')
 
+#소수점으로 int형 변환 시 에러가 날 경우, float형으로 반환시켜 계산하도록 만듬
+def float_filter(value):
+    try:
+        int(value)
+        return int(value)
+    except ValueError:
+        return float(value)
+
 def math_btn_press(value):
     global operation #함수 바깥의 글로벌 변수 사용
     global temp_number
     global answer_trigger
     if not num_ety.get() == '': # 기존에 입력한 숫자가 있을 때만 연산 버튼 인식
         operation = value
-        temp_number = int(num_ety.get()) # 입력된 숫자를 임시 변수로 옮긴다.
+        temp_number = float_filter(num_ety.get()) # 입력된 숫자를 임시 변수로 옮긴다. float_filter함수 호출
         num_ety.delete(0,'end') # 입력칸을 비우고 다음 숫자를 입력 받을 준비
         print(temp_number, operation) #
 
